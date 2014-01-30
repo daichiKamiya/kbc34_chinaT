@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.*;
-//maruyama
+//maru
 public class EmpManager extends JFrame implements ActionListener{
 
   JPanel cardPanel;
