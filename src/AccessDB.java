@@ -132,7 +132,19 @@ public class AccessDB {
 	
 	
 	
-	void insertDB(int id,String name,String dept){
+	/*void insertDB(int id,String name,String dept){
+		try {
+			//  boolean Œ^‚ğ•Ô‚·‚æ‚¤‚É‚·‚éB ture ‚È‚ç¬Œ÷@false@‚È‚ç¸”sG
+			result = statement.executeQuery(
+					"INSERT INTO temp_emp (EMP_ID,EMP_NAME,DEPT,DEL_FLG,ACC_FLG) "
+					+ "VALUES ("+ id +",'"+ name +"','"+ dept +"',0,0)");
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}*/
+	boolean insertDB(int id,String name,String dept){
 		try {
 			//  boolean Œ^‚ğ•Ô‚·‚æ‚¤‚É‚·‚éB ture ‚È‚ç¬Œ÷@false@‚È‚ç¸”sG
 			result = statement.executeQuery(
@@ -144,7 +156,6 @@ public class AccessDB {
 		}
 		
 	}
-	
 	void updateDB(int id){
 		int updateSql = 0;
 		try {
