@@ -149,8 +149,8 @@ public class AccessDB {
 		int updateSql = 0;
 		try {
 //			System.out.println("UPDATE TEMP_EMP set DEL_FLG = 1 where EMP_ID = "+ id);
-			updateSql = statement.executeUpdate("UPDATE TEMP_EMP set DEL_FLG = 1 where EMP_ID = "+ id);
-			connection.commit();
+			updateSql = statement.executeUpdate("UPDATE EMPMANAGER set DEL_FLG = 1 where EMP_ID = "+ id);
+			connection.commit(); 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
