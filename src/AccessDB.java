@@ -58,8 +58,6 @@ public class AccessDB {
 		DefaultTableModel returnTable = new DefaultTableModel(clamNames,0);
 		try {
 			result = statement.executeQuery("SELECT * FROM empmanager where emp_name = '"+ name +"' and DEL_FLG = 0");
-			
-			
 			while(result.next()) {
 				for(int i=0; i<4;i++){
 					sqlResult[i] = result.getString(i+1);
