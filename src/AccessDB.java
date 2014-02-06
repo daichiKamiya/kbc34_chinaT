@@ -92,32 +92,19 @@ public class AccessDB {
 		return returnTable;
 	}
 	
-	
-	
-	/*void insertDB(int id,String name,String dept){
-		try {
-			//  boolean å^Çï‘Ç∑ÇÊÇ§Ç…Ç∑ÇÈÅB ture Ç»ÇÁê¨å˜Å@falseÅ@Ç»ÇÁé∏îsÅG
-			result = statement.executeQuery(
-					"INSERT INTO temp_emp (EMP_ID,EMP_NAME,DEPT,DEL_FLG,ACC_FLG) "
-					+ "VALUES ("+ id +",'"+ name +"','"+ dept +"',0,0)");
-			connection.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-	}*/
 	boolean insertDB(int id,String name,String dept){
 		try {
 			//  boolean å^Çï‘Ç∑ÇÊÇ§Ç…Ç∑ÇÈÅB ture Ç»ÇÁê¨å˜Å@falseÅ@Ç»ÇÁé∏îsÅG
 			result = statement.executeQuery(
-					"INSERT INTO temp_emp (EMP_ID,EMP_NAME,DEPT,DEL_FLG,ACC_FLG) "
+					"INSERT INTO empmanager (EMP_ID,EMP_NAME,DEPT_NAME,DEL_FLG,ACC_FLG) "
 					+ "VALUES ("+ id +",'"+ name +"','"+ dept +"',0,0)");
 			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+		return true;
 	}
+	
 	boolean updateDB(int id){
 		int updateSql = 0;
 		try {
@@ -128,21 +115,9 @@ public class AccessDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return true;
 	}
-	/*
-	boolean updateDB(int id){
-		int updateSql = 0;
-		try {
-//			System.out.println("UPDATE TEMP_EMP set DEL_FLG = 1 where EMP_ID = "+ id);
-			
-			updateSql = statement.executeUpdate("UPDATE EMPMANAGER set DEL_FLG = 1 where EMP_ID = "+ id);
-			connection.commit(); 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
-	
+
 	void finishDB(){
 		try {
 			result.close();
