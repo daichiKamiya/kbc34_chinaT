@@ -108,8 +108,7 @@ public class Search extends JFrame implements ActionListener{
 	    
 	    idSearchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-//            	resultList = access.idSelectDB(idText.getText().toUpperCase());
-//            	responsList = access.nameSelectDB(idText.getText().toUpperCase());
+
             	responsList = access.idSelectDB(Integer.parseInt(idText.getText()));
             	resultList.setModel(responsList);
 			}
@@ -118,30 +117,17 @@ public class Search extends JFrame implements ActionListener{
 	    nameSearchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
             	responsList = access.nameSelectDB(nameText.getText().toUpperCase());
-//            	resultList = access.nameSelectDB(nameText.getText().toUpperCase());
             	resultList.setModel(responsList);
             }
 	    });
 	    
 	    deptSearchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
- //          	System.out.print(deptText.getText());        	
-//            	access.deptSelectDB(deptText.getText().toUpperCase());
-//            	resultList = access.deptSelectDB(deptText.getText().toUpperCase());
-//            	responsList = access.deptSelectDB(deptText.getText());
             	modelTable = access.deptSelectDB2(deptText.getText());
             	resultTable.setModel(modelTable);
-            	
-//            	resultList.setModel(responsList);
             }
 	    });
-/*	  //topÇ…ñﬂÇÈÅ@ñ¢é¿ëï
-	  		topBtn.addActionListener(new ActionListener() {
-	              public void actionPerformed(ActionEvent e){
-	              
-	              }
-	  		});
-*/	    
+
 		//resultPanels
 		JPanel resultPanel = new JPanel();
 		resultPanel.setLayout(null);
