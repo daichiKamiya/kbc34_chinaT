@@ -118,17 +118,30 @@ public class AccessDB {
 		}
 		
 	}
-	void updateDB(int id){
+	boolean updateDB(int id){
 		int updateSql = 0;
 		try {
 //			System.out.println("UPDATE TEMP_EMP set DEL_FLG = 1 where EMP_ID = "+ id);
+			if(EMP_ID == id){
+			updateSql = statement.executeUpdate("UPDATE EMPMANAGER set DEL_FLG = 1 where EMP_ID = "+ id);
+			connection.commit(); }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	/*
+	boolean updateDB(int id){
+		int updateSql = 0;
+		try {
+//			System.out.println("UPDATE TEMP_EMP set DEL_FLG = 1 where EMP_ID = "+ id);
+			
 			updateSql = statement.executeUpdate("UPDATE EMPMANAGER set DEL_FLG = 1 where EMP_ID = "+ id);
 			connection.commit(); 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+	*/
 	
 	void finishDB(){
 		try {
