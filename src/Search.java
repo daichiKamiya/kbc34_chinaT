@@ -1,22 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,8 +20,6 @@ public class Search extends JFrame implements ActionListener{
 	JPanel changePanels;
 	CardLayout cardLayout;
 	String responsArray;
-	DefaultListModel responsList;
-	JList resultList = new JList();
 	JScrollPane resultScrollPanel;
 	
 	JTable resultTable = new JTable();
@@ -48,7 +36,7 @@ public class Search extends JFrame implements ActionListener{
 		setBounds(100,100,600,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		final AccessDB access = new AccessDB();
+//		final AccessDB access = new AccessDB();
 		
 		Container contentPanel = getContentPane();
 		
@@ -109,22 +97,22 @@ public class Search extends JFrame implements ActionListener{
 	    idSearchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
 
-            	responsList = access.idSelectDB(Integer.parseInt(idText.getText()));
-            	resultList.setModel(responsList);
+//            	responsList = access.idSelectDB(Integer.parseInt(idText.getText()));
+//            	resultList.setModel(responsList);
 			}
 	    });
 	    
 	    nameSearchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-            	responsList = access.nameSelectDB(nameText.getText().toUpperCase());
-            	resultList.setModel(responsList);
+//            	responsList = access.nameSelectDB(nameText.getText().toUpperCase());
+//            	resultList.setModel(responsList);
             }
 	    });
 	    
 	    deptSearchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-            	modelTable = access.deptSelectDB2(deptText.getText());
-            	resultTable.setModel(modelTable);
+//            	modelTable = access.deptSelectDB2(deptText.getText());
+//            	resultTable.setModel(modelTable);
             }
 	    });
 

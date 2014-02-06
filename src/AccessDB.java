@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class AccessDB {
@@ -16,8 +14,9 @@ public class AccessDB {
     
 	AccessDB(){   
 		try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            connection = DriverManager.getConnection("jdbc:oracle:thin:scott/tiger@localhost/myorcl");
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+//			Class.forName("oracle.jdbc.OracleDriver");
+			connection = DriverManager.getConnection("jdbc:oracle:thin:scott/tiger@localhost/myorcl");
             statement = connection.createStatement();
             
             connection.setAutoCommit(false);
@@ -71,8 +70,7 @@ public class AccessDB {
 	}
 	
 	// dept Search
-	DefaultTableModel deptSelectDB2(String dept){		
-		String resultData = new String();
+	DefaultTableModel deptSelectDB(String dept){
 		String[] clamNames = {"é–àıî‘çÜ","ñºëO","ïîèê","ñêE"};
 		String[] sqlResult = new String[4];
 		DefaultTableModel returnTable = new DefaultTableModel(clamNames,0);
@@ -108,10 +106,9 @@ public class AccessDB {
 	boolean updateDB(int id){
 		int updateSql = 0;
 		try {
-//			System.out.println("UPDATE TEMP_EMP set DEL_FLG = 1 where EMP_ID = "+ id);
-			if(EMP_ID == id){
+			System.out.println("UPDATE TEMP_EMP set DEL_FLG = 1 where EMP_ID = "+ id);
 			updateSql = statement.executeUpdate("UPDATE EMPMANAGER set DEL_FLG = 1 where EMP_ID = "+ id);
-			connection.commit(); }
+			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

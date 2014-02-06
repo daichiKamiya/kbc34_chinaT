@@ -38,7 +38,7 @@ public class EmpManager extends JFrame implements ActionListener {
 	}
 
 	EmpManager() {
-		// ////////// login Panel /////////////////////////////
+		// ////////// card0 loginPanel /////////////////////////////
 
 		final AccessDB access = new AccessDB();
 
@@ -130,10 +130,10 @@ public class EmpManager extends JFrame implements ActionListener {
 		topPanel.add(deleteBtn);
 		topPanel.add(logoutBtn);
 
-		// //////////////////* カード2 (追加ページ） */////////////////////
-		JPanel card2 = new JPanel();
-		card2.setLayout(null);
-		card2.add(new JButton("button"));
+		// //////////////////* InsertPanal InsertPanal */////////////////////
+		JPanel InsertPanal = new JPanel();
+		InsertPanal.setLayout(null);
+		InsertPanal.add(new JButton("button"));
 		// 　Labelに文字をいれる
 		JLabel insInsertLabel = new JLabel("社員追加");
 		JLabel insEmpIdLabel = new JLabel("ID");
@@ -164,17 +164,17 @@ public class EmpManager extends JFrame implements ActionListener {
 		insertBtn.setActionCommand("Inser");
 
 		// Label,TxtFld,ButtonをPanelに挿入
-		card2.add(insInsertLabel);
-		card2.add(insTopBtn);
-		card2.add(insEmpIdLabel);
-		card2.add(insEmpIdTxtFld);
-		card2.add(insNameLabel);
-		card2.add(insNameTxtFld);
-		card2.add(insDeptLabel);
-		card2.add(insDeptTxtFld);
-		card2.add(insPostLabel);
-		card2.add(insPostTxtFld);
-		card2.add(insertBtn);
+		InsertPanal.add(insInsertLabel);
+		InsertPanal.add(insTopBtn);
+		InsertPanal.add(insEmpIdLabel);
+		InsertPanal.add(insEmpIdTxtFld);
+		InsertPanal.add(insNameLabel);
+		InsertPanal.add(insNameTxtFld);
+		InsertPanal.add(insDeptLabel);
+		InsertPanal.add(insDeptTxtFld);
+		InsertPanal.add(insPostLabel);
+		InsertPanal.add(insPostTxtFld);
+		InsertPanal.add(insertBtn);
 
 		// Label,TxtFld,Buttonの位置を座標で指定
 		insInsertLabel.setBounds(50, 10, 300, 50);
@@ -191,9 +191,9 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		// Container contentPanenu = getContentPane();
 
-		// ///////////////* カード3　　　（削除ページ） */////////////////////
-		JPanel card3 = new JPanel();
-		card3.setLayout(null);
+		// ///////////////* card3 deletPanel */////////////////////
+		JPanel deletePanel = new JPanel();
+		deletePanel.setLayout(null);
 
 		// 社員番号入力フィールド
 		JLabel dltEmpIdLabel = new JLabel("社員ID");
@@ -235,28 +235,28 @@ public class EmpManager extends JFrame implements ActionListener {
 		deleteLabel.setFont(new Font("ＭＳ ゴシック", Font.BOLD, 50));
 		deleteLabel.setBounds(50, 10, 300, 50);
 
-		card3.add(deleteLabel);
+		deletePanel.add(deleteLabel);
 
-		card3.add(dltEmpIdLabel);
-		card3.add(dltEmpIdTxtFld);
+		deletePanel.add(dltEmpIdLabel);
+		deletePanel.add(dltEmpIdTxtFld);
 
-		card3.add(dltEmpNameLabel);
-		card3.add(dltEmpNameTxtFld);
+		deletePanel.add(dltEmpNameLabel);
+		deletePanel.add(dltEmpNameTxtFld);
 
-		card3.add(dltDeptLabel);
-		card3.add(dltDeptTxtFld);
+		deletePanel.add(dltDeptLabel);
+		deletePanel.add(dltDeptTxtFld);
 
-		card3.add(enterBtn);
-		card3.add(dltTopBtn);
+		deletePanel.add(enterBtn);
+		deletePanel.add(dltTopBtn);
 
 		Label.setHorizontalAlignment(JLabel.CENTER);
 		Label.setVerticalAlignment(JLabel.TOP);
 
 		Container contentPane1 = getContentPane();
-		contentPane1.add(card3, BorderLayout.CENTER);
+		contentPane1.add(deletePanel, BorderLayout.CENTER);
 		contentPane1.add(Label, BorderLayout.SOUTH);
 
-		// ///////////////* カード4　　　（検索ページ） */////////////////////
+		// ///////////////* card4　 search & resultPanel */////////////////////
 		// Search panels
 		JPanel searchPanel = new JPanel();
 		searchPanel.setLayout(null); // レイアウト手動
@@ -369,8 +369,8 @@ public class EmpManager extends JFrame implements ActionListener {
 		cardPanel.setLayout(layout);
 		cardPanel.add(loginPanel, "Login");
 		cardPanel.add(topPanel, "Toppage");
-		cardPanel.add(card2, "Insert");
-		cardPanel.add(card3, "Delete");
+		cardPanel.add(InsertPanal, "Insert");
+		cardPanel.add(deletePanel, "Delete");
 		cardPanel.add(searchPanel, "Search");
 		cardPanel.add(resultPanel, "Result");
 		
