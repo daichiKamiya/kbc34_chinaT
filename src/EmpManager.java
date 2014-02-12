@@ -33,6 +33,7 @@ public class EmpManager extends JFrame implements ActionListener {
 		EmpManager frame = new EmpManager();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(50, 50, 650, 550);
+		frame.setResizable(false);
 		frame.setTitle("ä«óùÉVÉXÉeÉÄ");
 		frame.setVisible(true);
 	}
@@ -70,9 +71,12 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		loginBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String str1 = empIdTxtFld.getText() + psssTxtFld.getText();
-				if (str1.equals("roothimitu"))
+				if (access.loginCheck(empIdTxtFld.getText(),psssTxtFld.getText()))
 					cardPanel.add(loginPanel, "Login");
+					
+//				String str1 = empIdTxtFld.getText() + psssTxtFld.getText();
+//				if (str1.equals("roothimitu"))
+//					cardPanel.add(loginPanel, "Login");
 			}
 		});
 

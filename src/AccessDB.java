@@ -29,6 +29,20 @@ public class AccessDB {
         }
     }
 	
+	// loginCheck
+	boolean loginCheck(String id,String pass){
+		try {
+			int idNum = Integer.parseInt(id);
+//			int passNum = Integer.parseInt(pass);
+			result = statement.executeQuery("SELECT ACC_FLG FROM empmanager where emp_id = "+ idNum +" and pass = '"+ pass +"'");	
+			result.next();
+			if(result.getInt(1) == 0)
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	// id Search
 	DefaultTableModel idSelectDB(int id){
