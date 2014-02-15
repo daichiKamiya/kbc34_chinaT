@@ -39,9 +39,11 @@ public class EmpManager extends JFrame implements ActionListener {
 	}
 
 	EmpManager() {
-		// ////////// card0 loginPanel /////////////////////////////
-
+		
+		// DataBase access
 		final AccessDB access = new AccessDB();
+		
+		// ////////// card0 loginPanel /////////////////////////////
 
 		final JPanel loginPanel = new JPanel();
 		loginPanel.setLayout(null);
@@ -71,9 +73,10 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		loginBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (access.loginCheck(empIdTxtFld.getText(),psssTxtFld.getText()))
+//				if (access.loginCheck(empIdTxtFld.getText(),psssTxtFld.getText()))
 					cardPanel.add(loginPanel, "Login");
-					
+//				else
+//					JOptionPane.showMessageDialog(this, "削除完了", "削除メッセージ",JOptionPane.PLAIN_MESSAGE);
 //				String str1 = empIdTxtFld.getText() + psssTxtFld.getText();
 //				if (str1.equals("roothimitu"))
 //					cardPanel.add(loginPanel, "Login");
@@ -351,6 +354,11 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		JLabel setName = new JLabel();
 		JButton excelOutBtn = new JButton("Excelで出力");
+		excelOutBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				access.excelOut();
+			}
+		});
 		JButton backBtn = new JButton("戻る");
 
 		resultScrollPanel.setBounds(20, 40, 390, 400);
@@ -378,7 +386,6 @@ public class EmpManager extends JFrame implements ActionListener {
 		cardPanel.add(searchPanel, "Search");
 		cardPanel.add(resultPanel, "Result");
 		
-
 		getContentPane().add(cardPanel, BorderLayout.CENTER);
 	}
 
