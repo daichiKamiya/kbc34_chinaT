@@ -2,7 +2,6 @@ import javax.swing.*;
 
 import java.awt.CardLayout;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.*;
@@ -11,17 +10,20 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 public class EmpManager extends JFrame implements ActionListener {
+	private static final long serialVersionUID = 1L;
 
 	JPanel cardPanel;
+	
 	CardLayout layout;
 	JTextField dltEmpIdTxtFld;
 	JTextField dltEmpNameTxtFld;
 	JTextField dltDeptTxtFld;
 	JLabel Label;
 	JTextField empIdTxtFld;
-	JTextField psssTxtFld;
+	JPasswordField passFld;
 	JLabel titleLabel;
 
+	//Search panel
 	JTable resultTable = new JTable();
 	DefaultTableModel modelTable = new DefaultTableModel();
 	JScrollPane resultScrollPanel;
@@ -65,21 +67,24 @@ public class EmpManager extends JFrame implements ActionListener {
 		JLabel PW = new JLabel("PW:");
 		PW.setBounds(105, 204, 50, 20);
 		PW.setFont(new Font("MS　ゴシック", Font.BOLD, 20));
-		psssTxtFld = new JTextField("", 20);
-		psssTxtFld.setBounds(150, 200, 200, 30);
+		passFld = new JPasswordField("", 20);
+		passFld.setBounds(150, 200, 200, 30);
 
 		// login action
 		final JButton loginBtn = new JButton("ログイン");
 
 		loginBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				if (access.loginCheck(empIdTxtFld.getText(),psssTxtFld.getText()))
+				String password = new String(passFld.getPassword());
+				if (access.loginCheck(empIdTxtFld.getText(),password)){
 					cardPanel.add(loginPanel, "Login");
-//				else
-//					JOptionPane.showMessageDialog(this, "削除完了", "削除メッセージ",JOptionPane.PLAIN_MESSAGE);
-//				String str1 = empIdTxtFld.getText() + psssTxtFld.getText();
-//				if (str1.equals("roothimitu"))
-//					cardPanel.add(loginPanel, "Login");
+					empIdTxtFld.setText("");
+					passFld.setText("");
+				}
+				else{
+					empIdTxtFld.setText("");
+					passFld.setText("");
+				}
 			}
 		});
 
@@ -91,7 +96,7 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		loginPanel.add(Title1);
 		loginPanel.add(empIdTxtFld);
-		loginPanel.add(psssTxtFld);
+		loginPanel.add(passFld);
 		loginPanel.add(ID);
 		loginPanel.add(PW);
 		loginPanel.add(loginBtn);
@@ -137,10 +142,10 @@ public class EmpManager extends JFrame implements ActionListener {
 		topPanel.add(deleteBtn);
 		topPanel.add(logoutBtn);
 
-		// //////////////////* InsertPanal InsertPanal */////////////////////
-		JPanel InsertPanal = new JPanel();
-		InsertPanal.setLayout(null);
-		InsertPanal.add(new JButton("button"));
+		// //////////////////* insertPanel insertPanel */////////////////////
+		final JPanel insertPanel = new JPanel();
+		insertPanel.setLayout(null);
+		insertPanel.add(new JButton("button"));
 		// 　Labelに文字をいれる
 		JLabel insInsertLabel = new JLabel("社員追加");
 		JLabel insEmpIdLabel = new JLabel("ID");
@@ -156,32 +161,41 @@ public class EmpManager extends JFrame implements ActionListener {
 		insPostLabel.setFont(new Font("Aril", Font.PLAIN, 28));
 
 		// Labelに対応したTextFildの作成
-		JTextField insEmpIdTxtFld = new JTextField();
-		JTextField insNameTxtFld = new JTextField();
-		JTextField insDeptTxtFld = new JTextField();
-		JTextField insPostTxtFld = new JTextField();
+		final JTextField insEmpIdTxtFld = new JTextField();
+		final JTextField insNameTxtFld = new JTextField();
+		final JTextField insDeptTxtFld = new JTextField();
+		final JTextField insPostTxtFld = new JTextField();
 
 		// Buttonの作成
 		JButton insTopBtn = new JButton("TOP");
 		insTopBtn.addActionListener(this);
 		insTopBtn.setActionCommand("Toppage");
 
-		JButton insertBtn = new JButton("追加");
-		insertBtn.addActionListener(this);
-		insertBtn.setActionCommand("Inser");
+		final JButton insertBtn = new JButton("追加");
+		insertBtn.addActionListener(new ActionListener(){
+			@Override
+				public void actionPerformed(ActionEvent e) {
+					if(access.insertDB(insEmpIdTxtFld.getText(),insNameTxtFld.getText(),insDeptTxtFld.getText(),insPostTxtFld.getText())){
+						JOptionPane.showMessageDialog(insertPanel, "追加しました。");
+					}else{
+						JOptionPane.showMessageDialog(insertPanel, "追加できませんでした。");
+						
+					}
+				}
+			});
 
 		// Label,TxtFld,ButtonをPanelに挿入
-		InsertPanal.add(insInsertLabel);
-		InsertPanal.add(insTopBtn);
-		InsertPanal.add(insEmpIdLabel);
-		InsertPanal.add(insEmpIdTxtFld);
-		InsertPanal.add(insNameLabel);
-		InsertPanal.add(insNameTxtFld);
-		InsertPanal.add(insDeptLabel);
-		InsertPanal.add(insDeptTxtFld);
-		InsertPanal.add(insPostLabel);
-		InsertPanal.add(insPostTxtFld);
-		InsertPanal.add(insertBtn);
+		insertPanel.add(insInsertLabel);
+		insertPanel.add(insTopBtn);
+		insertPanel.add(insEmpIdLabel);
+		insertPanel.add(insEmpIdTxtFld);
+		insertPanel.add(insNameLabel);
+		insertPanel.add(insNameTxtFld);
+		insertPanel.add(insDeptLabel);
+		insertPanel.add(insDeptTxtFld);
+		insertPanel.add(insPostLabel);
+		insertPanel.add(insPostTxtFld);
+		insertPanel.add(insertBtn);
 
 		// Label,TxtFld,Buttonの位置を座標で指定
 		insInsertLabel.setBounds(50, 10, 300, 50);
@@ -196,10 +210,8 @@ public class EmpManager extends JFrame implements ActionListener {
 		insPostTxtFld.setBounds(250, 350, 150, 30);
 		insertBtn.setBounds(230, 410, 100, 30);
 
-		// Container contentPanenu = getContentPane();
-
 		// ///////////////* card3 deletPanel */////////////////////
-		JPanel deletePanel = new JPanel();
+		final JPanel deletePanel = new JPanel();
 		deletePanel.setLayout(null);
 
 		// 社員番号入力フィールド
@@ -226,8 +238,18 @@ public class EmpManager extends JFrame implements ActionListener {
 		// enterボタン作成
 		JButton enterBtn = new JButton("Enter");
 		enterBtn.setBounds(450, 300, 100, 30);
-		enterBtn.addActionListener(this);
-		enterBtn.setActionCommand("Del");
+		enterBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				if(dltEmpIdTxtFld.getText().equals("") && dltEmpNameTxtFld.getText().equals("") && dltDeptTxtFld.getText().equals(""))
+					JOptionPane.showMessageDialog(deletePanel, "入力されていません。");
+				else{
+					if(access.deleteDB(dltEmpIdTxtFld.getText(),dltEmpNameTxtFld.getText(),dltDeptTxtFld.getText())){
+						JOptionPane.showMessageDialog(deletePanel, "削除しました。");
+					}else
+						JOptionPane.showMessageDialog(deletePanel, "削除できませんでした。");
+					}
+				}
+		});
 
 		// TOPボタン作成
 		JButton dltTopBtn = new JButton("TOP");
@@ -243,16 +265,12 @@ public class EmpManager extends JFrame implements ActionListener {
 		deleteLabel.setBounds(50, 10, 300, 50);
 
 		deletePanel.add(deleteLabel);
-
 		deletePanel.add(dltEmpIdLabel);
 		deletePanel.add(dltEmpIdTxtFld);
-
 		deletePanel.add(dltEmpNameLabel);
 		deletePanel.add(dltEmpNameTxtFld);
-
 		deletePanel.add(dltDeptLabel);
 		deletePanel.add(dltDeptTxtFld);
-
 		deletePanel.add(enterBtn);
 		deletePanel.add(dltTopBtn);
 
@@ -265,31 +283,36 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		// ///////////////* card4　 search & resultPanel */////////////////////
 		// Search panels
-		JPanel searchPanel = new JPanel();
+		final JPanel searchPanel = new JPanel();
 		searchPanel.setLayout(null); // レイアウト手動
 
 		JLabel searchTitle = new JLabel("社員検索");
 		searchTitle.setFont(new Font("ＭＳ 明朝", Font.BOLD, 26));
 
+			// content setting
 		JLabel id = new JLabel("ID検索");
 		JLabel name = new JLabel("社員名検索");
 		JLabel dept = new JLabel("部署名検索");
-		final JTextField idText = new JTextField();
-		final JTextField nameText = new JTextField();
-		final JTextField deptText = new JTextField();
-		JButton idSearchBtn = new JButton("検索");
+		final JTextField idTextFld = new JTextField();
+		final JTextField nameTextFld = new JTextField();
+		final JTextField deptTextFld = new JTextField();
+		final JButton idSearchBtn = new JButton("検索");
 		JButton nameSearchBtn = new JButton("検索");
 		JButton deptSearchBtn = new JButton("検索");
 		JButton searchReturnBtn = new JButton("TOP");
 
-		// layout null
+		idTextFld.setText("");
+		nameTextFld.setText("");
+		deptTextFld.setText("");
+		
+			// layout setting
 		searchTitle.setBounds(250, 5, 150, 25);
 		id.setBounds(110, 100, 70, 40);
 		name.setBounds(110, 180, 70, 40);
 		dept.setBounds(110, 260, 70, 40);
-		idText.setBounds(220, 100, 160, 50);
-		nameText.setBounds(220, 180, 160, 50);
-		deptText.setBounds(220, 260, 160, 50);
+		idTextFld.setBounds(220, 100, 160, 50);
+		nameTextFld.setBounds(220, 180, 160, 50);
+		deptTextFld.setBounds(220, 260, 160, 50);
 		idSearchBtn.setBounds(400, 100, 60, 50);
 		nameSearchBtn.setBounds(400, 180, 60, 50);
 		deptSearchBtn.setBounds(400, 260, 60, 50);
@@ -297,14 +320,14 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		searchPanel.add(searchTitle);
 		searchPanel.add(id);
-		searchPanel.add(idText);
+		searchPanel.add(idTextFld);
 		searchPanel.add(name);
-		searchPanel.add(nameText);
+		searchPanel.add(nameTextFld);
 		searchPanel.add(dept);
-		searchPanel.add(deptText);
+		searchPanel.add(deptTextFld);
 		searchPanel.add(idSearchBtn);
-		searchPanel.add(nameSearchBtn);
-		searchPanel.add(deptSearchBtn);
+//		searchPanel.add(nameSearchBtn);
+//		searchPanel.add(deptSearchBtn);
 		searchPanel.add(searchReturnBtn);
 
 		// ボタンの設定
@@ -317,36 +340,54 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		idSearchBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				modelTable = access.idSelectDB(Integer.parseInt(idText
-						.getText()));
-				resultTable.setModel(modelTable);
-
+				
+				if(nameTextFld.getText().equals("") && deptTextFld.getText().equals("") && dltDeptTxtFld.getText().equals(""))
+					JOptionPane.showMessageDialog(searchPanel, "入力されていません。");
+					
+				else{
+					// id check
+					if(!idTextFld.getText().equals("")){
+						// is id check
+						System.out.println("is id");
+						modelTable = access.idSelectDB(Integer.parseInt(idTextFld.getText()),
+								nameTextFld.getText().toUpperCase(),deptTextFld.getText().toUpperCase());
+						resultTable.setModel(modelTable);
+					}
+					else{
+						// no id check
+						System.out.println("no id");
+						modelTable = access.idSelectDB(nameTextFld.getText().toUpperCase(),
+								deptTextFld.getText().toUpperCase());
+						resultTable.setModel(modelTable);
+					}
+				}	
 			}
 		});
-
+/*		
 		nameSearchBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				modelTable = access.nameSelectDB(nameText.getText());
+				modelTable = access.nameSelectDB(nameTextFld.getText());
 				resultTable.setModel(modelTable);
 			}
 		});
 
 		deptSearchBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				modelTable = access.deptSelectDB(deptText.getText()
+				modelTable = access.deptSelectDB(deptTextFld.getText()
 						.toUpperCase());
 				resultTable.setModel(modelTable);
 			}
 		});
 		
-		searchReturnBtn.addActionListener(this);
-		searchReturnBtn.setActionCommand("Toppage");
-		
 		searchReturnBtn.addActionListener(new ActionListener() { public
 		  void actionPerformed(ActionEvent e){ 
 			
 		} });
-
+*/
+		
+		searchReturnBtn.addActionListener(this);
+		searchReturnBtn.setActionCommand("Toppage");
+		
 		// resultPanels
 		JPanel resultPanel = new JPanel();
 		resultPanel.setLayout(null);
@@ -356,7 +397,10 @@ public class EmpManager extends JFrame implements ActionListener {
 		JButton excelOutBtn = new JButton("Excelで出力");
 		excelOutBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				access.excelOut();
+				if(access.excelOut(idTextFld.getText(),nameTextFld.getText().toUpperCase(),deptTextFld.getText().toUpperCase()))
+					JOptionPane.showMessageDialog(deletePanel, "作成しました");
+				else
+					JOptionPane.showMessageDialog(deletePanel, "作成できませんでした。");
 			}
 		});
 		JButton backBtn = new JButton("戻る");
@@ -381,7 +425,7 @@ public class EmpManager extends JFrame implements ActionListener {
 		cardPanel.setLayout(layout);
 		cardPanel.add(loginPanel, "Login");
 		cardPanel.add(topPanel, "Toppage");
-		cardPanel.add(InsertPanal, "Insert");
+		cardPanel.add(insertPanel, "Insert");
 		cardPanel.add(deletePanel, "Delete");
 		cardPanel.add(searchPanel, "Search");
 		cardPanel.add(resultPanel, "Result");
@@ -393,17 +437,5 @@ public class EmpManager extends JFrame implements ActionListener {
 		String cmd = e.getActionCommand();
 
 		layout.show(cardPanel, cmd);
-
-		String daiya = e.getActionCommand();
-
-		if (daiya.equals("Del")) {
-			JOptionPane.showMessageDialog(this, "削除完了", "削除メッセージ",
-					JOptionPane.PLAIN_MESSAGE);
-		} else if (daiya.equals("Inser")) {
-			JOptionPane.showMessageDialog(this, "社員を一人追加しました。", "追加メッセージ",
-					JOptionPane.PLAIN_MESSAGE);
-
-		}
-
 	}
 }
