@@ -70,7 +70,41 @@ public class AccessDB {
 		return returnTable;
 	}
 */	
-
+	//データの存在確認メソッド
+	boolean dataExists(String id,String name,String dept){
+		
+		name = sanitizing(name);
+		dept = sanitizing(dept);
+		
+		try {
+			if(id.equals("")){
+			result = statement.executeQuery(
+					"SELECT count(*) FROM empmanager "
+					+"where emp_name like '%"+ name 
+					+"%' and dept_name like '%"+ dept
+					+"%' and DEL_FLG = 0");
+			}else{
+				int idNum = Integer.parseInt(id);
+				result = statement.executeQuery(
+						"SELECT count(*) FROM empmanager "
+						+"where emp_id = "+ idNum
+						+"and emp_name like '%"+ name
+						+"%' and dept_name like '%"+ dept
+						+"%' and DEL_FLG = 0");
+			}
+		
+			result.next();
+			if(result.getInt(1) == 0){
+				return false;
+			}		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
+		
+	}
+	
+	
 	// idを含んだ社員検索メソッド
 	DefaultTableModel idSelectDB(int id,String name,String dept){
 		String[] clamNames = {"社員番号","名前","部署","役職"};
@@ -81,18 +115,12 @@ public class AccessDB {
 			name = sanitizing(name); //サニタイジング
 			dept = sanitizing(dept);
 			
-			System.out.println(name +","+ dept);
 			result = statement.executeQuery(
 					"SELECT * FROM empmanager "
 					+"where emp_id = "+ id
 					+"and emp_name like '%"+ name
 					+"%' and dept_name like '%"+ dept
 					+"%' and DEL_FLG = 0");
-			
-			result.next();
-			System.out.println(result.getString(1));
-			
-			result.first();
 			
 			while(result.next()) {
 	           for(int i=0; i<4;i++){
@@ -106,6 +134,8 @@ public class AccessDB {
 		return returnTable;
 	}
 	
+	
+	
 	// idを含まない社員検索メソッド
 	DefaultTableModel idSelectDB(String name,String dept){
 		String[] clamNames = {"社員番号","名前","部署","役職"};
@@ -115,16 +145,14 @@ public class AccessDB {
 		name = sanitizing(name); //文字の置換
 		dept = sanitizing(dept); //文字の置換
 		
-		try {
+		try {	
 			result = statement.executeQuery(
 					"SELECT * FROM empmanager "
 					+"where emp_name like '%"+ name 
 					+"%' and dept_name like '%"+ dept
 					+"%' and DEL_FLG = 0");
 			
-//			result.next();
-//			System.out.println(result.getString(1));
-					
+
 			while(result.next()) {
 	           for(int i=0; i<4;i++){
 	            	 sqlResult[i] = result.getString(i+1);
@@ -244,7 +272,6 @@ public class AccessDB {
 		titleCell.setCellValue("出力データ");
 
 		try {
-			
 			if(!id.equals("")){
 				int idNum = Integer.parseInt(id); 	
 				result = statement.executeQuery(
@@ -261,7 +288,17 @@ public class AccessDB {
 						+"%' and DEL_FLG = 0");
 			}
 			
-			int i = 2;
+			Row rowNameRow =empSheet.createRow(2);
+			Cell rowNameEmpIdCell = rowNameRow.createCell(0);
+			Cell rowNameEmpNameCell = rowNameRow.createCell(0);
+			Cell rowNameDeptCell = rowNameRow.createCell(0);
+			Cell rowNamePostCell = rowNameRow.createCell(0);
+			rowNameEmpIdCell.setCellValue("社員ID");
+			rowNameEmpNameCell.setCellValue("社員名");
+			rowNameDeptCell.setCellValue("部署名");
+			rowNamePostCell.setCellValue("役職");
+			
+			int i = 3;
 			while(result.next()){
 				++i;
 				

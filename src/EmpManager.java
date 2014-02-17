@@ -10,8 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 public class EmpManager extends JFrame implements ActionListener {
-	private static final long serialVersionUID = 1L;
-
 	JPanel cardPanel;
 	
 	CardLayout layout;
@@ -238,17 +236,24 @@ public class EmpManager extends JFrame implements ActionListener {
 		// enterボタン作成
 		JButton enterBtn = new JButton("Enter");
 		enterBtn.setBounds(450, 300, 100, 30);
+		
 		enterBtn.addActionListener(new ActionListener(){
+			
 			public void actionPerformed(ActionEvent e) {
-				if(dltEmpIdTxtFld.getText().equals("") && dltEmpNameTxtFld.getText().equals("") && dltDeptTxtFld.getText().equals(""))
+				if(dltEmpIdTxtFld.getText().equals("") && dltEmpNameTxtFld.getText().equals("") && dltDeptTxtFld.getText().equals("")){
 					JOptionPane.showMessageDialog(deletePanel, "入力されていません。");
-				else{
-					if(access.deleteDB(dltEmpIdTxtFld.getText(),dltEmpNameTxtFld.getText(),dltDeptTxtFld.getText())){
-						JOptionPane.showMessageDialog(deletePanel, "削除しました。");
-					}else
-						JOptionPane.showMessageDialog(deletePanel, "削除できませんでした。");
+				}else{
+					if(access.dataExists(dltEmpIdTxtFld.getText(), dltEmpNameTxtFld.getText(), dltDeptTxtFld.getText())){
+						if(access.deleteDB(dltEmpIdTxtFld.getText(),dltEmpNameTxtFld.getText(),dltDeptTxtFld.getText())){
+							JOptionPane.showMessageDialog(deletePanel, "削除しました。");
+						}else{
+							JOptionPane.showMessageDialog(deletePanel, "削除できませんでした。");
+						}
+					}else{
+						JOptionPane.showMessageDialog(deletePanel, "データがありません。");
 					}
 				}
+			}
 		});
 
 		// TOPボタン作成
@@ -341,20 +346,31 @@ public class EmpManager extends JFrame implements ActionListener {
 		idSearchBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				if(nameTextFld.getText().equals("") && deptTextFld.getText().equals("") && dltDeptTxtFld.getText().equals(""))
+				if(idTextFld.getText().equals("") && nameTextFld.getText().equals("") && deptTextFld.getText().equals("") && dltDeptTxtFld.getText().equals("")){
 					JOptionPane.showMessageDialog(searchPanel, "入力されていません。");
+					cardPanel.add(searchPanel, "Result");
+				}
 					
 				else{
 					// id check
 					if(!idTextFld.getText().equals("")){
 						// is id check
 						System.out.println("is id");
+						if(!access.dataExists(idTextFld.getText(),nameTextFld.getText().toUpperCase(),deptTextFld.getText().toUpperCase())){
+							JOptionPane.showMessageDialog(searchPanel, "検索結果がありません");
+							cardPanel.add(searchPanel, "Result");
+							cardPanel.add(searchPanel, "Result");
+						}
 						modelTable = access.idSelectDB(Integer.parseInt(idTextFld.getText()),
 								nameTextFld.getText().toUpperCase(),deptTextFld.getText().toUpperCase());
 						resultTable.setModel(modelTable);
-					}
-					else{
+					}else{
 						// no id check
+						if(!access.dataExists(idTextFld.getText(),nameTextFld.getText().toUpperCase(),deptTextFld.getText().toUpperCase())){
+							JOptionPane.showMessageDialog(searchPanel, "検索結果がありません");
+							cardPanel.add(searchPanel, "Result");
+						}
+						
 						System.out.println("no id");
 						modelTable = access.idSelectDB(nameTextFld.getText().toUpperCase(),
 								deptTextFld.getText().toUpperCase());
@@ -389,7 +405,7 @@ public class EmpManager extends JFrame implements ActionListener {
 		searchReturnBtn.setActionCommand("Toppage");
 		
 		// resultPanels
-		JPanel resultPanel = new JPanel();
+		final JPanel resultPanel = new JPanel();
 		resultPanel.setLayout(null);
 		resultScrollPanel = new JScrollPane(resultTable);
 
@@ -398,9 +414,9 @@ public class EmpManager extends JFrame implements ActionListener {
 		excelOutBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				if(access.excelOut(idTextFld.getText(),nameTextFld.getText().toUpperCase(),deptTextFld.getText().toUpperCase()))
-					JOptionPane.showMessageDialog(deletePanel, "作成しました");
+					JOptionPane.showMessageDialog(resultPanel, "作成しました");
 				else
-					JOptionPane.showMessageDialog(deletePanel, "作成できませんでした。");
+					JOptionPane.showMessageDialog(resultPanel, "作成できませんでした。");
 			}
 		});
 		JButton backBtn = new JButton("戻る");
