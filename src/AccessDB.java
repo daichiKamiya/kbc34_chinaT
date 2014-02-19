@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,6 +11,8 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -51,25 +54,6 @@ public class AccessDB {
 		return false;
 	}
 	
-	// id Search
-/*	DefaultTableModel idSelectDB(int id){
-		String[] clamNames = {"社員番号","名前","部署","役職"};
-		String[] sqlResult = new String[4];
-		DefaultTableModel returnTable = new DefaultTableModel(clamNames,0);
-		try {
-			result = statement.executeQuery("SELECT * FROM empmanager where emp_id = "+ id +" and DEL_FLG = 0");
-			while(result.next()) {
-	           for(int i=0; i<4;i++){
-	            	 sqlResult[i] = result.getString(i+1);
-	            }	             
-	             returnTable.addRow(sqlResult);    
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return returnTable;
-	}
-*/	
 	//データの存在確認メソッド
 	boolean dataExists(String id,String name,String dept){
 		
@@ -112,7 +96,7 @@ public class AccessDB {
 		DefaultTableModel returnTable = new DefaultTableModel(clamNames,0);
 		try {
 			
-			name = sanitizing(name); //サニタイジング
+			name = sanitizing(name);
 			dept = sanitizing(dept);
 			
 			result = statement.executeQuery(
@@ -142,8 +126,8 @@ public class AccessDB {
 		String[] sqlResult = new String[4];
 		DefaultTableModel returnTable = new DefaultTableModel(clamNames,0);
 		
-		name = sanitizing(name); //文字の置換
-		dept = sanitizing(dept); //文字の置換
+		name = sanitizing(name);
+		dept = sanitizing(dept);
 		
 		try {	
 			result = statement.executeQuery(
@@ -152,7 +136,6 @@ public class AccessDB {
 					+"%' and dept_name like '%"+ dept
 					+"%' and DEL_FLG = 0");
 			
-
 			while(result.next()) {
 	           for(int i=0; i<4;i++){
 	            	 sqlResult[i] = result.getString(i+1);
@@ -166,44 +149,6 @@ public class AccessDB {
 	}
 	
 	
-	
-	// name Search
-	DefaultTableModel nameSelectDB(String name){
-		String[] clamNames = {"社員番号","名前","部署","役職"};
-		String[] sqlResult = new String[4];
-		DefaultTableModel returnTable = new DefaultTableModel(clamNames,0);
-		try {
-			result = statement.executeQuery("SELECT * FROM empmanager where emp_name = '"+ name +"' and DEL_FLG = 0");
-			while(result.next()) {
-				for(int i=0; i<4;i++){
-					sqlResult[i] = result.getString(i+1);
-				}            
-            returnTable.addRow(sqlResult);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return returnTable;
-	}
-	
-	DefaultTableModel deptSelectDB(String dept){
-		String[] clamNames = {"社員番号","名前","部署","役職"};
-		String[] sqlResult = new String[4];
-		DefaultTableModel returnTable = new DefaultTableModel(clamNames,0);
-		try {
-			result = statement.executeQuery("SELECT emp_id,emp_name,dept_name,post FROM empmanager where post = '"+ dept +"' and DEL_FLG = 0");
-			while(result.next()) {				
-				for(int i=0; i<4;i++){
-	            	 sqlResult[i] = result.getString(i+1);
-	            }
-	             
-	             returnTable.addRow(sqlResult);
-	        }
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return returnTable;
-	}
 	
 	// 社員追加メソッド
 	boolean insertDB(String id,String name,String dept,String post){
@@ -229,8 +174,8 @@ public class AccessDB {
 	// 論理削除メソッド
 	boolean deleteDB(String id,String name,String dept){
 		try {
-			name = sanitizing(name); //文字の置換
-			dept = sanitizing(dept); //文字の置換
+			name = sanitizing(name);
+			dept = sanitizing(dept); 
 			
 			if(!id.equals("")){
 				// idがある場合のupdate
@@ -265,12 +210,9 @@ public class AccessDB {
 	// excelで出力メソッド
 	boolean excelOut(String id,String name,String dept) {
 		HSSFWorkbook pushExcelData = new HSSFWorkbook();
+		
 		Sheet empSheet = pushExcelData.createSheet("出力データ");
-
-		Row topRow = empSheet.createRow(0);
-		Cell titleCell = topRow.createCell(0);
-		titleCell.setCellValue("出力データ");
-
+		
 		try {
 			if(!id.equals("")){
 				int idNum = Integer.parseInt(id); 	
@@ -288,32 +230,63 @@ public class AccessDB {
 						+"%' and DEL_FLG = 0");
 			}
 			
-			Row rowNameRow =empSheet.createRow(2);
+			Row topRow = empSheet.createRow(0);
+			
+			Cell titleCell = topRow.createCell(0);
+			titleCell.setCellValue("出力データ");
+			
+			Row rowNameRow =empSheet.createRow(2); //列名列
+			
+			// Cellのスタイル
+			CellStyle rowNameStyle = pushExcelData.createCellStyle();
+			rowNameStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+			rowNameStyle.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
+			rowNameStyle.setBorderTop(CellStyle.BORDER_THIN);
+			rowNameStyle.setBorderBottom(CellStyle.BORDER_DOUBLE);
+			rowNameStyle.setBorderLeft(CellStyle.BORDER_THIN);
+			rowNameStyle.setBorderRight(CellStyle.BORDER_THIN);
+			rowNameStyle.setAlignment(CellStyle.ALIGN_CENTER);
+			
+			CellStyle standardStyle = pushExcelData.createCellStyle();
+			standardStyle.setBorderTop(CellStyle.BORDER_THIN);
+			standardStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			standardStyle.setBorderLeft(CellStyle.BORDER_THIN);
+			standardStyle.setBorderRight(CellStyle.BORDER_THIN);
+			
+			// 列名列の設定
 			Cell rowNameEmpIdCell = rowNameRow.createCell(0);
-			Cell rowNameEmpNameCell = rowNameRow.createCell(0);
-			Cell rowNameDeptCell = rowNameRow.createCell(0);
-			Cell rowNamePostCell = rowNameRow.createCell(0);
+			Cell rowNameEmpNameCell = rowNameRow.createCell(1);
+			Cell rowNameDeptCell = rowNameRow.createCell(2);
+			Cell rowNamePostCell = rowNameRow.createCell(3);
 			rowNameEmpIdCell.setCellValue("社員ID");
 			rowNameEmpNameCell.setCellValue("社員名");
 			rowNameDeptCell.setCellValue("部署名");
 			rowNamePostCell.setCellValue("役職");
+			rowNameEmpIdCell.setCellStyle(rowNameStyle);
+			rowNameEmpNameCell.setCellStyle(rowNameStyle);
+			rowNameDeptCell.setCellStyle(rowNameStyle);
+			rowNamePostCell.setCellStyle(rowNameStyle);
 			
-			int i = 3;
+			
+			int rowNum = 2; //行ナンバー
 			while(result.next()){
-				++i;
-				
-				Row row = empSheet.createRow(i);
+				rowNum++;
+				Row row = empSheet.createRow(rowNum);
+
 				Cell empIdCell = row.createCell(0);
 				Cell empNameCell = row.createCell(1);
 				Cell deptCell = row.createCell(2);
 				Cell postCell = row.createCell(3);
 				
 				empIdCell.setCellValue(result.getInt(1));
+				empIdCell.setCellStyle(standardStyle);
 				empNameCell.setCellValue(result.getString(2));
+				empNameCell.setCellStyle(standardStyle);
 				deptCell.setCellValue(result.getString(3));
+				deptCell.setCellStyle(standardStyle);
 				postCell.setCellValue(result.getString(4));
+				postCell.setCellStyle(standardStyle);
 			}
-			
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			return false;
@@ -322,22 +295,23 @@ public class AccessDB {
 		FileOutputStream out = null;
 		try {
 
-			out = new FileOutputStream("C:/Users/user/Desktop/Emp_manager.xls");
+			out = new FileOutputStream("C:/Users/user/Desktop/社員検索結果.xls");
 			pushExcelData.write(out);
-
+		
+		} catch (FileNotFoundException e1){
+			return false;
 		} catch (IOException e) {
-			System.out.println(e.toString());
+			return false;
 		} finally {
 			try {
 				out.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				System.out.println(e.toString());
 				return false;
 			}
 			System.out.println("created");
 		}
 		return true;
-
 	}
 
 	// サニタイジングメソッド
