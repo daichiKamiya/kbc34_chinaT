@@ -10,9 +10,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class EmpManager extends JFrame implements ActionListener {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	JPanel cardPanel;
@@ -27,8 +24,8 @@ public class EmpManager extends JFrame implements ActionListener {
 	JTable resultTable = new JTable();
 	DefaultTableModel modelTable = new DefaultTableModel();
 	JScrollPane resultScrollPanel;
-	public String cmd; // 検索結果表示のカードレイアウト変更
 
+	
 	public static void main(String[] args) {
 		EmpManager frame = new EmpManager();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,27 +66,26 @@ public class EmpManager extends JFrame implements ActionListener {
 
 		// login action
 		final JButton loginBtn = new JButton("ログイン");
-		
 		loginBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				String password = new String(passFld.getPassword());
-//				if (access.loginCheck(empIdTxtFld.getText(), password)) {
+				
+				char[] password = passFld.getPassword();
+				String passStr = new String(password);
+					if (access.loginCheck(empIdTxtFld.getText(), passStr)) {
 					cardPanel.add(loginPanel, "Login");
 					empIdTxtFld.setText("");
 					passFld.setText("");
-//				} else {
+				} else {
 					empIdTxtFld.setText("");
 					passFld.setText("");
-//				}
+				}
 			}
 		});
 
 		// btn setting
 		loginBtn.setBounds(400, 350, 100, 30);
 		loginBtn.addActionListener(this);
-
 		titleLabel = new JLabel();
-
 		loginPanel.add(Title1);
 		loginPanel.add(empIdTxtFld);
 		loginPanel.add(passFld);
@@ -98,6 +94,7 @@ public class EmpManager extends JFrame implements ActionListener {
 		loginPanel.add(loginBtn);
 
 		// ////////////////// / card1 topPanel ///////////////////////////
+		
 		final JPanel topPanel = new JPanel();
 		topPanel.add(new JButton("Button"));
 		// パネルを作成
@@ -261,8 +258,7 @@ public class EmpManager extends JFrame implements ActionListener {
 									"削除できませんでした。");
 						}
 					} else {
-						JOptionPane
-								.showMessageDialog(deletePanel, "データがありません。");
+						JOptionPane.showMessageDialog(deletePanel, "データがありません。");
 					}
 				}
 			}
@@ -274,7 +270,6 @@ public class EmpManager extends JFrame implements ActionListener {
 		dltTopBtn.setActionCommand("Toppage");
 		dltTopBtn.setBounds(530, 45, 70, 40);
 
-//		Label = new JLabel();
 
 		deletePanel.add(deleteLabel);
 		deletePanel.add(dltEmpIdLabel);
@@ -293,6 +288,11 @@ public class EmpManager extends JFrame implements ActionListener {
 		// Search panels
 		final JPanel searchPanel = new JPanel();
 		searchPanel.setLayout(null);
+		
+		// resultPanels
+		final JPanel resultPanel = new JPanel();
+		resultPanel.setLayout(null);
+		resultScrollPanel = new JScrollPane(resultTable);
 		
 		JLabel searchLabel = new JLabel("社員検索");
 		searchLabel.setFont(new Font("ＭＳ ゴシック", Font.BOLD, 50));
@@ -339,9 +339,10 @@ public class EmpManager extends JFrame implements ActionListener {
 		searchPanel.add(searchReturnBtn);
 
 		// ボタンの設定
+		searchReturnBtn.addActionListener(this);
+		searchReturnBtn.setActionCommand("Toppage");
 		searchEnterBtn.addActionListener(this);
-		searchEnterBtn.setActionCommand("Result");;
-
+		
 		searchEnterBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -350,36 +351,29 @@ public class EmpManager extends JFrame implements ActionListener {
 						&& deptTextFld.getText().equals("")
 						&& dltDeptTxtFld.getText().equals("")) {
 					JOptionPane.showMessageDialog(searchPanel, "入力されていません。");
-					cardPanel.add(searchPanel, "Result");
 				}else {
 					// id check
 					if (!idTextFld.getText().equals("")) {
-						// is id check
-						System.out.println("is id");
-						if (!access.dataExists(idTextFld.getText(), nameTextFld
-								.getText().toUpperCase(), deptTextFld.getText()
-								.toUpperCase())) {
-							JOptionPane.showMessageDialog(searchPanel,
-									"検索結果がありません");
-							cardPanel.add(searchPanel, "Result");
-							cardPanel.add(searchPanel, "Result");
+						if (!access.dataExists(idTextFld.getText(), 
+								nameTextFld.getText().toUpperCase(),
+								deptTextFld.getText().toUpperCase())) {
+							JOptionPane.showMessageDialog(searchPanel,"検索結果がありません");
 						}
 						modelTable = access.idSelectDB(
 								Integer.parseInt(idTextFld.getText()),
 								nameTextFld.getText().toUpperCase(),
 								deptTextFld.getText().toUpperCase());
+						
 						resultTable.setModel(modelTable);
+					
 					} else {
 						// no id check
-						if (!access.dataExists(idTextFld.getText(), nameTextFld
-								.getText().toUpperCase(), deptTextFld.getText()
-								.toUpperCase())) {
-							JOptionPane.showMessageDialog(searchPanel,
-									"検索結果がありません");
-							cardPanel.add(searchPanel, "Result");
+						if (!access.dataExists(idTextFld.getText(), 
+								nameTextFld.getText().toUpperCase(),
+								deptTextFld.getText().toUpperCase())) {
+							JOptionPane.showMessageDialog(searchPanel,"検索結果がありません");
 						}
-
-						System.out.println("no id");
+						layout.show(cardPanel, "Result");
 						modelTable = access.idSelectDB(nameTextFld.getText().toUpperCase(),
 								deptTextFld.getText().toUpperCase());
 						resultTable.setModel(modelTable);
@@ -388,14 +382,13 @@ public class EmpManager extends JFrame implements ActionListener {
 			}
 		});
 		
-		searchReturnBtn.addActionListener(this);
-		searchReturnBtn.setActionCommand("Toppage");
+		
 
 		
 		// resultPanels
-		final JPanel resultPanel = new JPanel();
-		resultPanel.setLayout(null);
-		resultScrollPanel = new JScrollPane(resultTable);
+//		final JPanel resultPanel = new JPanel();
+//		resultPanel.setLayout(null);
+//		resultScrollPanel = new JScrollPane(resultTable);
 
 		JLabel setName = new JLabel();
 		JButton excelOutBtn = new JButton("Excelで出力");
@@ -442,5 +435,9 @@ public class EmpManager extends JFrame implements ActionListener {
 		String cmd = e.getActionCommand();
 
 		layout.show(cardPanel, cmd);
+	}
+	
+	public void showSearch(){
+		layout.show(cardPanel, "Search");
 	}
 }

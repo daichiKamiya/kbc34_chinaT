@@ -29,12 +29,37 @@ public class AccessDB {
 			connection = DriverManager.getConnection("jdbc:oracle:thin:scott/tiger@localhost/myorcl");
             statement = connection.createStatement();
             connection.setAutoCommit(false);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } 
-		catch (SQLException e){
-            e.printStackTrace();
-        }
+            
+           result = statement.executeQuery("select count(*) from user_tables where table_name = 'EMPMANAGER'");
+           result.next();
+           
+ 			if(result.getInt(1) < 1){
+ 				System.out.println("表作成");
+ 				statement.executeQuery("CREATE TABLE SCOTT.EMPMANAGER ( "+
+            		"EMP_ID NUMBER NOT NULL ,"+
+            		"EMP_NAME VARCHAR2(32) NOT NULL ,"+ 
+            		"DEPT_NAME VARCHAR2(32),"+
+            		"POST VARCHAR2(32),"+
+            		"DEL_FLG NUMBER DEFAULT 0 ,"+
+            		"ACC_FLG NUMBER DEFAULT 0 ,"+
+            		"PASS VARCHAR2(32),"+
+            		"PRIMARY KEY (EMP_ID) VALIDATE )");
+ 				Runtime runtime = Runtime.getRuntime();
+ 				Process process = runtime.exec("sqlldr scott/tiger control='c:/java/emp.ctl'");
+ 				try {
+ 					process.waitFor();
+ 					connection.commit();  
+ 				} catch (InterruptedException e) {
+ 					e.printStackTrace();
+ 				}
+ 			}
+ 		}catch (ClassNotFoundException e) {
+ 				e.printStackTrace();
+ 		} catch (SQLException e){
+ 				e.printStackTrace();
+ 		} catch (IOException e) {
+ 				e.printStackTrace();
+ 		}
     }
 	
 	// ログインメソッド
