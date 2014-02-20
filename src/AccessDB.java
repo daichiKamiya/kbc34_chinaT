@@ -30,8 +30,8 @@ public class AccessDB {
             statement = connection.createStatement();
             connection.setAutoCommit(false);
             
-           result = statement.executeQuery("select count(*) from user_tables where table_name = 'EMPMANAGER'");
-           result.next();
+            result = statement.executeQuery("select count(*) from user_tables where table_name = 'EMPMANAGER'");
+            result.next();
            
  			if(result.getInt(1) < 1){
  				System.out.println("•\ì¬");
@@ -44,10 +44,13 @@ public class AccessDB {
             		"ACC_FLG NUMBER DEFAULT 0 ,"+
             		"PASS VARCHAR2(32),"+
             		"PRIMARY KEY (EMP_ID) VALIDATE )");
+ 				
  				Runtime runtime = Runtime.getRuntime();
- 				Process process = runtime.exec("sqlldr scott/tiger control='c:/java/emp.ctl'");
+ 				Process process = runtime.exec("sqlldr scott/tiger control='.\\sql\\emp.ctl'");
+ 				
  				try {
  					process.waitFor();
+ 					
  					connection.commit();  
  				} catch (InterruptedException e) {
  					e.printStackTrace();
@@ -320,7 +323,7 @@ public class AccessDB {
 		FileOutputStream out = null;
 		try {
 
-			out = new FileOutputStream("C:/Users/user/Desktop/ŽÐˆõŒŸõŒ‹‰Ê.xls");
+			out = new FileOutputStream("./ŽÐˆõŒŸõŒ‹‰Ê.xls");
 			pushExcelData.write(out);
 		
 		} catch (FileNotFoundException e1){

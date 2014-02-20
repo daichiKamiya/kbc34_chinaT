@@ -16,7 +16,6 @@ public class EmpManager extends JFrame implements ActionListener {
 	CardLayout layout;
 	JTextField dltEmpIdTxtFld;
 	JTextField dltEmpNameTxtFld;
-	JTextField dltDeptTxtFld;
 	JLabel Label;
 	JTextField empIdTxtFld;
 	JPasswordField passFld;
@@ -37,7 +36,6 @@ public class EmpManager extends JFrame implements ActionListener {
 	}
 
 	EmpManager() {
-
 		// DataBase access
 		final AccessDB access = new AccessDB();
 
@@ -289,11 +287,6 @@ public class EmpManager extends JFrame implements ActionListener {
 		final JPanel searchPanel = new JPanel();
 		searchPanel.setLayout(null);
 		
-		// resultPanels
-		final JPanel resultPanel = new JPanel();
-		resultPanel.setLayout(null);
-		resultScrollPanel = new JScrollPane(resultTable);
-		
 		JLabel searchLabel = new JLabel("é–àıåüçı");
 		searchLabel.setFont(new Font("ÇlÇr ÉSÉVÉbÉN", Font.BOLD, 50));
 		
@@ -359,13 +352,13 @@ public class EmpManager extends JFrame implements ActionListener {
 								deptTextFld.getText().toUpperCase())) {
 							JOptionPane.showMessageDialog(searchPanel,"åüçıåãâ Ç™Ç†ÇËÇ‹ÇπÇÒ");
 						}
+						layout.show(cardPanel, "Result");
 						modelTable = access.idSelectDB(
 								Integer.parseInt(idTextFld.getText()),
 								nameTextFld.getText().toUpperCase(),
 								deptTextFld.getText().toUpperCase());
 						
 						resultTable.setModel(modelTable);
-					
 					} else {
 						// no id check
 						if (!access.dataExists(idTextFld.getText(), 
@@ -383,13 +376,10 @@ public class EmpManager extends JFrame implements ActionListener {
 		});
 		
 		
-
-		
 		// resultPanels
-//		final JPanel resultPanel = new JPanel();
-//		resultPanel.setLayout(null);
-//		resultScrollPanel = new JScrollPane(resultTable);
-
+		final JPanel resultPanel = new JPanel();
+		resultPanel.setLayout(null);
+		resultScrollPanel = new JScrollPane(resultTable);
 		JLabel setName = new JLabel();
 		JButton excelOutBtn = new JButton("ExcelÇ≈èoóÕ");
 		excelOutBtn.addActionListener(new ActionListener() {
@@ -435,9 +425,5 @@ public class EmpManager extends JFrame implements ActionListener {
 		String cmd = e.getActionCommand();
 
 		layout.show(cardPanel, cmd);
-	}
-	
-	public void showSearch(){
-		layout.show(cardPanel, "Search");
 	}
 }
